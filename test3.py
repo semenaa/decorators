@@ -14,16 +14,17 @@ def logger(old_function):
 
     def new_function(*args, **kwargs):
         result = old_function(*args, **kwargs)
+        # Отсебятина. Укоротить строки в аргументах до 20 символов, ибо чересчур длинные
+        args_list = []
+        for arg in args:
+            if isinstance(arg, str) and len(arg) > 20:
+                args_list.append(arg[:20])
+        kwargs_list = []
+        for kwarg in kwargs:
+            if isinstance(kwarg, str) and len(kwarg) > 20:
+                kwargs_list.append(kwarg[:20])
+        # Конец отсебятины
         with open('main.log', 'a', encoding='utf-8') as f:
-            # Если есть строки в аргументах, укоротить их до 20 символов
-            args_list = []
-            for arg in args:
-                if isinstance(arg, str) and len(arg) > 20:
-                    args_list.append(arg[:20])
-            kwargs_list = []
-            for kwarg in kwargs:
-                if isinstance(kwarg, str) and len(kwarg) > 20:
-                    kwargs_list.append(kwarg[:20])
             f.write(
                 f'{datetime.datetime.now()}: {old_function.__name__}, args: {args_list}, kwargs: {kwargs_list}, '
                 f'result: {result}\n')
